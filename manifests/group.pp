@@ -32,7 +32,7 @@ define yum::group (
     'present', 'installed', default: {
       exec { "yum-groupinstall-${name}":
         command => join(concat(["yum -y group install '${name}'"], $install_options), ' '),
-        unless  => "yum group list hidden '${name}' | egrep -i '^Installed.+Groups:$'",
+        unless  => "yum group list hidden '${name}' | egrep -i '^Installed.+$'",
         timeout => $timeout,
       }
       if $ensure == 'latest' {
@@ -48,7 +48,7 @@ define yum::group (
     'absent', 'purged': {
       exec { "yum-groupremove-${name}":
         command => "yum -y group remove '${name}'",
-        onlyif  => "yum group list hidden '${name}' | egrep -i '^Installed.+Groups:$'",
+        onlyif  => "yum group list hidden '${name}' | egrep -i '^Installed.$'",
         timeout => $timeout,
       }
     }
